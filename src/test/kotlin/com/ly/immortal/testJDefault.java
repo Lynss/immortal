@@ -388,4 +388,10 @@ public class testJDefault extends BaseTest {
         employee[1] = new TestK.Employee("y", 2);
 
     }
+
+    private <T> List<T> cast(Collection<T> collection) {
+        List<T> list = new ArrayList<>();
+        list.addAll(collection);
+        return list;
+    }
 }

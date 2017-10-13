@@ -1,4 +1,4 @@
-package com.enci.merchant.config
+package com.ly.immortal.config
 
 import org.springframework.stereotype.Component
 

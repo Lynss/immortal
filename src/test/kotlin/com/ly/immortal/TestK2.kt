@@ -303,4 +303,10 @@ class TestK : BaseTest() {
     fun testPath() {
         println(System.getProperty("user.dir"))
     }
+
+    private fun <T> cast(collection: Collection<T>): List<T> {
+        val list = ArrayList<T>()
+        list.addAll(collection)
+        return list
+    }
 }

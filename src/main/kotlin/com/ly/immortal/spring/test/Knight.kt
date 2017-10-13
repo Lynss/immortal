@@ -1,5 +1,7 @@
 package com.ly.immortal.spring.test
 
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Service
 import java.io.PrintStream
 
 interface Quest{
@@ -8,6 +10,9 @@ interface Quest{
 
 data class SlaryDragonQuest(val printStream: PrintStream) : Quest {
     override fun embarkQuest() = printStream.println("勇士轻而易举的杀死了巨龙")
+}
+data class TestQuest(val message:String) : Quest {
+    override fun embarkQuest() = println(message)
 }
 
 data class BraveKnight(val quest: Quest){

@@ -20,7 +20,7 @@ class MusicTest : BaseTest() {
     }
 
     @t
-    fun test2() {
+    fun testQualifier() {
         cDPlayer.play()
     }
 }
