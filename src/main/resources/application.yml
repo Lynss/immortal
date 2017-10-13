@@ -1,6 +1,11 @@
 spring:
   profiles:
     active: prod
+  thymeleaf:
+    mode: LEGACYHTML5
+  devtools:
+    restart:
+      additional-paths: src/main/kotlin
 testaaa:
   aaa: sgoyi
 server:
