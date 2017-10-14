@@ -2,6 +2,7 @@ package com.ly.immortal.config
 
 import com.ly.immortal.spring.test.BraveKnight
 import com.ly.immortal.spring.test.SgtPeppers
+import org.springframework.boot.env.YamlPropertySourceLoader
 import org.springframework.context.annotation.*
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.scheduling.annotation.EnableScheduling
@@ -27,6 +28,10 @@ class MyConfiguration {
      */
     @Bean
     fun propertyConfigInDev(): PropertySourcesPlaceholderConfigurer = PropertySourcesPlaceholderConfigurer()
+
+    @Bean
+    fun yamlPropertySourceLoader(): YamlPropertySourceLoader = YamlPropertySourceLoader()
+
 
     /**
      *spring-task多线程配置
