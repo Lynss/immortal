@@ -13,10 +13,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 @RequestMapping("test")
 class TestController {
     @GetMapping(value = "/flash")
-    fun testFlash(model: RedirectAttributes):ModelAndView{
-        model.addAttribute("pathVariable","testPathVariable")
+    fun testFlash(model: RedirectAttributes):ModelAndView {
+        model.addAttribute("pathVariable", "testPathVariable")
         model.addFlashAttribute("model", BasUser(1, "ly"))
-        return ModelAndView("redirect:/test/index/{pathVariable}")
+        return ModelAndView("redirect:/test/thymeleaf/{pathVariable}")
     }
     @GetMapping(value = "/thymeleaf/{pathVariable}")
     fun home(@PathVariable pathVariable:String,model: ModelMap):ModelAndView{
