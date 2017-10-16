@@ -1,6 +1,8 @@
 package com.ly.immortal.spring.test
 
 import com.ly.immortal.BaseTest
+import com.ly.immortal.domain.test.CDPlayer
+import com.ly.immortal.domain.test.CompactDisc
 import org.junit.Assert.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier

@@ -1,7 +1,5 @@
-package com.ly.immortal.spring.test
+package com.ly.immortal.domain.test
 
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Service
 import java.io.PrintStream
 
 interface Quest{

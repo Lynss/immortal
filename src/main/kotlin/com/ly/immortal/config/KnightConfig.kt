@@ -1,6 +1,8 @@
 package com.ly.immortal.config
 
-import com.ly.immortal.spring.test.*
+import com.ly.immortal.domain.test.BraveKnight
+import com.ly.immortal.domain.test.Quest
+import com.ly.immortal.domain.test.TestQuest
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

@@ -1,7 +1,7 @@
 package com.ly.immortal.config
 
-import com.ly.immortal.spring.test.BraveKnight
-import com.ly.immortal.spring.test.SgtPeppers
+import com.ly.immortal.domain.test.BraveKnight
+import com.ly.immortal.domain.test.SgtPeppers
 import org.springframework.boot.env.YamlPropertySourceLoader
 import org.springframework.context.annotation.*
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer

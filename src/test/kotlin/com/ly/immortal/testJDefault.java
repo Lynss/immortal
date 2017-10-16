@@ -394,4 +394,19 @@ public class testJDefault extends BaseTest {
         list.addAll(collection);
         return list;
     }
+
+    @Test
+    public void testEntry() {
+        Map<String, String> a = new HashMap<String,String>(){
+            private static final long serialVersionUID = -8588394271476585961L;
+            {
+                put("a", "a");
+                put("b", "b");
+            }
+        };
+        for (Map.Entry<String, String> stringStringEntry : a.entrySet()) {
+            System.out.println(stringStringEntry.getKey());
+            System.out.println(stringStringEntry.getValue());
+        }
+    }
 }
