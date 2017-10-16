@@ -2,13 +2,12 @@ package com.ly.immortal.config
 
 import com.ly.immortal.domain.test.BraveKnight
 import com.ly.immortal.domain.test.SgtPeppers
-import org.springframework.boot.env.YamlPropertySourceLoader
 import org.springframework.context.annotation.*
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.scheduling.annotation.EnableScheduling
-import java.util.concurrent.Executors
 import org.springframework.scheduling.config.ScheduledTaskRegistrar
 import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 
 @Configuration
@@ -29,10 +28,6 @@ class MyConfiguration {
     @Bean
     fun propertyConfigInDev(): PropertySourcesPlaceholderConfigurer = PropertySourcesPlaceholderConfigurer()
 
-    @Bean
-    fun yamlPropertySourceLoader(): YamlPropertySourceLoader = YamlPropertySourceLoader()
-
-
     /**
      *spring-task多线程配置
      */
@@ -44,8 +39,4 @@ class MyConfiguration {
     fun taskExecutor(): Executor {
         return Executors.newScheduledThreadPool(100)
     }
-    /**
-     * datasource配置
-     */
-
 }

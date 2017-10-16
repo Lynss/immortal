@@ -1,4 +1,4 @@
-package com.ly.immortal.dao.mapper;
+package com.ly.immortal.domain.mapper;
 
 import com.ly.immortal.domain.model.BasUser;
 import com.ly.immortal.domain.model.BasUserExample;
