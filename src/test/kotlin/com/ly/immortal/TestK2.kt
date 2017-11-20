@@ -43,6 +43,8 @@ class TestK : BaseTest() {
     }
 
     fun max(vararg a: Double): Double {
+        var b= doubleArrayOf(*a)
+        var c= arrayOf(1.0,2.0)
         var max = Double.MIN_VALUE
         for (d in a) {
             if (d > max) {
@@ -249,19 +251,19 @@ class TestK : BaseTest() {
     class Counter(private val from: Int, private val to: Int, private val doubles: DoubleArray) : RecursiveTask<Double>() {
 
         override fun compute(): Double? {
-            if (to - from < 1000000) {
+            return if (to - from < 1000000) {
                 var count = 0.0
                 (from until to)
                         .asSequence()
                         .filter { doubles[it] > 0.9 }
                         .forEach { count += doubles[it] }
-                return count
+                count
             } else {
                 val mid = (from + to) / 2
                 val before = Counter(from, mid, doubles)
                 val after = Counter(mid, to, doubles)
                 ForkJoinTask.invokeAll(before, after)
-                return before.join() + after.join()
+                before.join() + after.join()
             }
         }
 

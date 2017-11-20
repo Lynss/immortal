@@ -107,7 +107,6 @@ fun evalWhen(e: Expr) = when (e) {
 }
 
 
-//如果when中没有对应的条件，会提示你加上else。。。醉醉的，编译时出现- -有点智能
 fun getColor(color: Color) = when (color) {
     Color.BLUE -> "BLUE"
     Color.RED -> "RED"
