@@ -1,13 +1,12 @@
 package com.ly.immortal
 
-import com.ly.immortal.domain.test.BraveKnight
-import com.ly.immortal.domain.test.Quest
 import sun.misc.Lock
-import java.io.BufferedReader
-import java.io.FileReader
+import java.io.*
 import java.util.*
-import kotlin.reflect.KClass
+import kotlin.reflect.full.memberProperties
 import org.junit.Test as ly
+import kotlin.coroutines.experimental.*
+import kotlin.streams.toList
 
 fun findB(b: KotlinInAction.Person) = b.name == "b"
 
@@ -21,11 +20,12 @@ inline fun <T> synchronized(lock: Lock, action: () -> T): T {
         lock.unlock()
     }
 }
-inline  fun <reified T:Any> Any.isA () = if(this is T){
-        println("yes")
-    }else{
-        println("no")
-    }
+
+inline fun <reified T : Any> Any.isA() = if (this is T) {
+    println("yes")
+} else {
+    println("no")
+}
 
 inline fun <reified T> loadService() = ServiceLoader.load(T::class.java)
 
@@ -72,7 +72,7 @@ class KotlinInAction : BaseTest() {
         }
 
         val begin = 0
-        println(begin.needTimesAddTo(10))
+        println(begin needTimesAddTo(10))
     }
 
     //下面两种写法等价,所以val放到构造其中是一种语法糖的写法，能同时为同名属性赋值
@@ -347,14 +347,17 @@ class KotlinInAction : BaseTest() {
     // lambda的函数的return，当然，你也可以使用标签返回(如果不加标记时可以用lambda函数的名称来作为标记，如foreach)
     fun inlineReader(): String? {
         val a = BufferedReader(FileReader("/workspace/ly/immortal/src/test/kotlin/com/ly/immortal/1.txt")).use mark@ { br ->
+//            val c = br.readText()
+            val d = br.lines().toList()
             val a = br.readLine()
             println(a)
             val b = br.readLine()
             println(b)
-            return@mark b
+            return@mark d
 //            return@forEach b
         }
-        return a
+        println(a)
+        return "1"
     }
 
     @ly
@@ -369,7 +372,10 @@ class KotlinInAction : BaseTest() {
 
     @ly
     fun testAnonymous() {
-        val a = listOf(1, 2)
+        val a = listOf(1, "2")
+        for((c,d)in a.withIndex()){
+
+        }
         a.forEach(fun(a) {
             println(a)
         })
@@ -381,13 +387,14 @@ class KotlinInAction : BaseTest() {
     }
 
     //当泛型需要多个约束时
-    fun <T> ensureTrailingPeriod(seq: T) where T:Appendable,T:CharSequence{
+    fun <T> ensureTrailingPeriod(seq: T) where T : Appendable, T : CharSequence {
         if (!seq.endsWith('.')) {
             seq.append('.')
         }
     }
+
     //当你创建泛型类时，如果不创建约束，会默认使用Any?作为约束
-    class Processor<T>{
+    class Processor<in T> {
         fun process(value: T) {
             value?.hashCode()
         }
@@ -411,7 +418,7 @@ class KotlinInAction : BaseTest() {
 //        val b = listOf("A","B")
 //        printSum(b)
         //cant cast
-        val c = setOf("A","B")
+        val c = setOf("A", "B")
         printSum(c)
     }
 
@@ -420,12 +427,12 @@ class KotlinInAction : BaseTest() {
     fun testInlineGenericity() {
         val a = listOf(1, 2, 3)
         val c = listOf("1")
-        val d =c::class
+        val d = c::class
         val b = a::class
-        if (d.isInstance(c)){
+        if (d.isInstance(c)) {
             println("jeje")
         }
-        a.isA<List< String>>()//true.证明最终类型仍然被擦除了
+        a.isA<List<String>>()//true.证明最终类型仍然被擦除了
     }
 
     //kotlin中，可变集合和不可操作集合是不一样的，如果A是B的子类型，那么对于不可操作集合而言,Collection<A>也是Collection<B>的子类型
@@ -437,8 +444,9 @@ class KotlinInAction : BaseTest() {
         }
 
         fun readSth(list: Collection<Any>) {
-            list.forEach{ println(it) }
+            list.forEach { println(it) }
         }
+
         val a = listOf(1)
         readSth(a)
 
@@ -446,32 +454,35 @@ class KotlinInAction : BaseTest() {
 //        addSth(b) cant do like this ,it cant compile
         addSth(mutableListOf("1"))
     }
+
     //参照上面，如果我们想声明一个类型是可以协变的，需要用到out关键字
-     open class Animal(open val name:String){
-        infix fun feedBy(a:Person) {
+    open class Animal(open val name: String) {
+        infix fun feedBy(a: Person) {
             println("${name} has been feed by ${a.name}")
         }
     }
 
-    fun feedAll(a: MutableList<Animal>,b:Person) {
-        a.forEach{it feedBy b}
-    }
-    fun feedAllWithOut (a: List<Animal>,b:Person) {
-        a.forEach{it feedBy b}
+    fun feedAll(a: MutableList<Animal>, b: Person) {
+        a.forEach { it feedBy b }
     }
 
-    class Herd<T:Animal>(private val animals:MutableCollection<T> = mutableListOf()):MutableCollection< T> by animals{
-        infix fun feedAllBy(a:Person) {
-            animals.forEach{it feedBy a}
+    fun feedAllWithOut(a: List<Animal>, b: Person) {
+        a.forEach { it feedBy b }
+    }
+
+    class Herd<T : Animal>(private val animals: MutableCollection<T> = mutableListOf()) : MutableCollection<T> by animals {
+        infix fun feedAllBy(a: Person) {
+            animals.forEach { it feedBy a }
         }
 
     }
 
-    class Cat(override val name: String): Animal(name)
+    class Cat(override val name: String) : Animal(name)
+
     //out 位置意味着这个类型只能是被返回的而不能作为被修改的
     @ly
     fun testOut() {
-        val b = mutableListOf(Cat("tom"),Cat("jerry"))
+        val b = mutableListOf(Cat("tom"), Cat("jerry"))
         val a = Herd(b)
         a feedAllBy Person("ly")
 
@@ -483,11 +494,140 @@ class KotlinInAction : BaseTest() {
 
     //点变型，普通写法：
     fun <T : R, R> copyTo(source: MutableList<T>, copy: MutableList<R>) {
-        source.forEach{copy.add(it)}
+        source.forEach { copy.add(it) }
     }
 
     //优雅的写法 ,out表示只用其在out位置，in同理,同时out也意味着必须是T的子类型，而in必须是T的父类型（这里其实不需要in,但是写出来更容易理解）
     fun <T> copyToGentle(source: MutableList<out T>, copy: MutableList<in T>) {
-        source.forEach{copy.add(it)}
+        source.forEach { copy.add(it) }
+    }
+
+    @ly
+    fun testKotlinReflect() {
+        val a = Person::class
+        println(a.qualifiedName)
+        val b = Person("ly")
+        val c = b.javaClass.kotlin
+        c.memberProperties.forEach {
+            println(it.name)
+        }
+    }
+
+    @ly
+    fun testFunction() {
+        val a = ::sum
+        val x = { a: Int, b: Int -> a + b }
+        val y = fun(x: Int, y: Int) = x + y
+        x.invoke(1, 2)
+
+        val b = a.invoke(1, 2)
+        val c = a.call(1, 2)
+        val d = a(1, 2)
+        val e = ::counter
+        println(e.call())
+        println(e.invoke())
+        e.setter.call(1)
+        println(e.get())
+    }
+
+    infix fun String.endWith(buildAction: StringBuilder.() -> String): String {
+        val a = StringBuilder(this)
+        return a.buildAction()
+    }
+
+    @ly
+    fun testLambdaWithParam() {
+        val a = "balala"
+        println(a endWith {
+            this.append("fuck")
+            this.toString()
+        })
+    }
+
+    open class Tag
+    class TABLE : Tag() {
+        fun tr(init :TR.()->Unit){
+
+        }
+    }
+
+    class TR : Tag() {
+        fun td(init:TD.()->Unit){
+
+        }
+    }
+    class TD : Tag() {
+
+    }
+
+    fun table(init:TABLE.()->Unit) = TABLE().apply(init)
+    fun tr(init:TR.()->Unit)=TR().apply(init)
+
+    @ly
+    fun testKHtmlDsl() {
+
+    }
+
+    @ly
+    fun testVarargs() {
+        val a = arrayOf(1, 2, 3)
+        val (b,c,d) = listOf(*a)
+    }
+
+    @ly
+    fun testFib() {
+        val fibCreater = buildSequence{
+            var a = 0
+            var b = 1
+            yield(1)
+            while (true) {
+                var temp = a+b
+                yield(temp)
+                a = b
+                b = temp
+            }
+        }
+        println(fibCreater.take(7).toList())
+    }
+
+    @ly
+    fun testUserDir() {
+        println(System.getProperties())
+    }
+
+    @ly
+    fun testO() {
+        val f = File("/workspace/ly/immortal/src/test/kotlin/com/ly/immortal/1.txt")
+        FileWriter(f,true).use {
+            it.write("1")
+        }
+
+    }
+
+    @ly
+    fun testI() {
+        val f = File("/workspace/ly/immortal/src/test/kotlin/com/ly/immortal/1.txt")
+        DataInputStream(FileInputStream(f)).use {
+            do {
+                println(it.read())
+            }while (it.read()!=-1)
+        }
+
     }
 }
+
+fun main(args: Array<String>) {
+    BufferedReader(InputStreamReader(System.`in`)).use {
+        do{
+            println(it.readLine())
+        }while (it.readLine()!="end")
+    }
+}
+
+
+fun sum(x: Int, y: Int): Int {
+    println(x + y)
+    return x + y
+}
+
+var counter = 0
